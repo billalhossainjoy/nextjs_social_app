@@ -16,7 +16,7 @@ const Layout: React.FC<Props> = async ({children}) => {
     if (!session.user) redirect("/login")
 
     return <SessionProvider value={session}>
-        <div className={"flex min-h-screen flex-col"}>
+        <div className={"flex min-h-screen flex-col bg-secondary"}>
             <Navbar/>
             <div className={"max-w-7xl mx-auto p-5 flex w-full grow gap-5"}>
                 <Menubar className={"sticky top-[5.25rem] hidden h-fit flex-none space-y-3 rounded-xl bg-card px-3 py-5 shadow-sm sm:block lg:py-5 xl:w-80"}/>

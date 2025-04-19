@@ -9,7 +9,7 @@ const UsersWhoToFollow: React.FC =async () => {
     // await new Promise(r => setTimeout(r, 5000)) // just for testing
     const usersToFollow =await WhoToFollow()
     return (
-        <div className={"space-y-5 rounded-2xl bg-card p-5 shadow-sm"}>
+        <div className={"hidden md:block space-y-5 rounded-2xl bg-card p-5 shadow-sm"}>
             <div className={"text-xl font-bold"}>
                 {
                     usersToFollow.map((user)=> (

@@ -30,8 +30,3 @@ services:
     environment:
       POSTGRES_USER: billal
       POSTGRES_PASSWORD: password
-
-
-volumes:
-  mongo_data:
-  mongo_config:

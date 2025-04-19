@@ -8,7 +8,7 @@ const TrendingTopics: React.FC = async () => {
 
 
     return (
-        <div className={"space-y-5 rounded-2xl bg-card p-5 shadow-sm"}>
+        <div className={"hidden md:block space-y-5 rounded-2xl bg-card p-5 shadow-sm"}>
             <div className={"text-xl font-bold"}>
                 {
                     trendingTopics.map(({hashtag, count}, i) => {

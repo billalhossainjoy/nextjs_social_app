@@ -18,6 +18,9 @@ model User {
   bio          String?
   sessions     Session[]
 
+  following Follow[] @relation("following")
+  followers Follow[] @relation("followers")
+
   createat DateTime @default(now())
   Post     Post[]
 
@@ -43,4 +46,13 @@ model Post {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("posts")
+}
+
+model Follow {
+  followerId  String
+  follower    User   @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  folowing    User   @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
 }

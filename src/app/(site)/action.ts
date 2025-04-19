@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import {PostDataInclude, userDataSelect} from "@/types";
 import {validateRequest} from "@/auth";
 import {unstable_cache} from "next/cache";
+import {User} from "lucia";
 
 export async function getPosts() {
     try {
@@ -18,7 +19,7 @@ export async function getPosts() {
     }
 }
 
-export async function WhoToFollow() {
+export async function WhoToFollow(): Promise<User[]> {
     const {user} = await validateRequest();
     if (!user) {
         return []

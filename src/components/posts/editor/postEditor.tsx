@@ -9,9 +9,14 @@ import {submitPost} from "@/components/posts/editor/action";
 import {useSession} from "@/context/sessionProvider";
 import UserAvatar from "@/components/userAvatar";
 import {Button} from "@/components/ui/button";
+import {usePostMutation} from "@/components/posts/editor/mutation";
+import {toast} from "sonner";
+import LoadingButton from "@/components/loadingButton";
 
 
 const PostEditor: React.FC = () => {
+    const mutation = usePostMutation();
+
     const {user} = useSession()
     const editor = useEditor({
         extensions: [
@@ -30,8 +35,12 @@ const PostEditor: React.FC = () => {
     }) || ""
 
     async function submit() {
-        await submitPost(input)
-        editor?.commands.clearContent()
+        mutation.mutate(input,{
+            onSuccess: () => {
+                toast.success("Post successfully saved!")
+                editor?.commands.clearContent()
+            }
+        })
     }
 
     return (
@@ -41,9 +50,9 @@ const PostEditor: React.FC = () => {
                 <EditorContent editor={editor} className={"w-full max-h-[20rem] overflow-y-auto bg-secondary py-2 rounded-2xl px-5 "}/>
             </div>
             <div className={"flex justify-end"}>
-                <Button onClick={submit} disabled={!input.trim()} className={"min-w-20"}>
+                <LoadingButton loading={mutation.isPending} onClick={submit} disabled={!input.trim()} className={"min-w-20"}>
                     Post
-                </Button>
+                </LoadingButton>
             </div>
 
         </div>

@@ -15,6 +15,7 @@ import {LogOutIcon, Monitor, Moon, Sun, UserIcon} from "lucide-react";
 import {logout} from "@/app/(auth)/action";
 import {cn} from "@/lib/utils";
 import {useTheme} from "next-themes";
+import {useQueryClient} from "@tanstack/react-query";
 
 type Props = {
     className?: string
@@ -24,6 +25,8 @@ const UserButton: React.FC<Props> = ({className}) => {
     const {user} = useSession()
 
     const {theme, setTheme} = useTheme()
+
+    const queryClient = useQueryClient()
 
     return (
         <DropdownMenu>
@@ -66,7 +69,10 @@ const UserButton: React.FC<Props> = ({className}) => {
                     </DropdownMenuPortal>
                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout()} className={"text-destructive"}>
+                <DropdownMenuItem onClick={() => {
+                    queryClient.clear();
+                    logout()
+                }} className={"text-destructive"}>
                    <LogOutIcon  className={"mr-2 size-4 text-destructive"}/>
                     Logout
                 </DropdownMenuItem>
