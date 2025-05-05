@@ -1,25 +1,11 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import {PostDataInclude, userDataSelect} from "@/types";
 import {validateRequest} from "@/auth";
 import {unstable_cache} from "next/cache";
-import {User} from "lucia";
+import { getUserDataSelect} from "@/types";
 
-export async function getPosts() {
-    try {
-        return await prisma.post.findMany({
-            orderBy: {
-                createdAt: "desc"
-            },
-            include: PostDataInclude
-        })
-    } catch (err: unknown) {
-        return []
-    }
-}
-
-export async function WhoToFollow(): Promise<User[]> {
+export async function WhoToFollow() {
     const {user} = await validateRequest();
     if (!user) {
         return []
@@ -29,9 +15,14 @@ export async function WhoToFollow(): Promise<User[]> {
             where: {
                 NOT: {
                     id: user.id
+                },
+                followers: {
+                    none: {
+                        followerId: user.id,
+                    }
                 }
             },
-            select: userDataSelect,
+            select: getUserDataSelect(user.id),
             take: 5
         })
     } catch (err: unknown) {

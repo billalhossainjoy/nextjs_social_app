@@ -16,13 +16,14 @@ model User {
   googleId     String?   @unique
   avatarUrl    String?
   bio          String?
+  createdAt    DateTime @default(now())
   sessions     Session[]
 
   following Follow[] @relation("following")
   followers Follow[] @relation("followers")
 
   createat DateTime @default(now())
-  Post     Post[]
+  posts     Post[]
 
   @@map("users")
 }
@@ -55,4 +56,5 @@ model Follow {
   folowing    User   @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
+  @@map("follows")
 }

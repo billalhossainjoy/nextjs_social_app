@@ -5,10 +5,8 @@ import "./styles.css"
 import {EditorContent, useEditor} from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
-import {submitPost} from "@/components/posts/editor/action";
 import {useSession} from "@/context/sessionProvider";
 import UserAvatar from "@/components/userAvatar";
-import {Button} from "@/components/ui/button";
 import {usePostMutation} from "@/components/posts/editor/mutation";
 import {toast} from "sonner";
 import LoadingButton from "@/components/loadingButton";
@@ -37,7 +35,6 @@ const PostEditor: React.FC = () => {
     async function submit() {
         mutation.mutate(input,{
             onSuccess: () => {
-                toast.success("Post successfully saved!")
                 editor?.commands.clearContent()
             }
         })

@@ -1,19 +1,18 @@
 "use client"
 import React from 'react';
 import {useInfiniteQuery} from "@tanstack/react-query";
-import { PostsPage} from "@/types";
-import {Loader2} from "lucide-react";
-import Post from "@/components/posts/post";
 import apiClient from "@/lib/ky";
-import InfiniteScrollContainer from "@/components/infiniteScrollContainer";
+import {PostsPage} from "@/types";
 import PostsLoadingSkeleton from "@/components/postsLoadingSkeleton";
+import InfiniteScrollContainer from "@/components/infiniteScrollContainer";
+import Post from "@/components/posts/post";
+import {Loader2} from "lucide-react";
 
-const Feed: React.FC = () => {
-    const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status,} = useInfiniteQuery({
-        queryKey: ["posts-feed", "home"],
-        queryFn: ({pageParam}) => apiClient.get("api/posts",
-        pageParam ? {searchParams: {cursor: pageParam}} : {}
-        ).json<PostsPage>(),
+const FollowingFeed: React.FC = () => {
+
+    const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status} = useInfiniteQuery({
+        queryKey: ["following-feed"],
+        queryFn: () => apiClient.get("api/posts/following").json<PostsPage>(),
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
@@ -26,7 +25,7 @@ const Feed: React.FC = () => {
 
     if(status === "success" && !posts.length && !hasNextPage) {
         return <p className={"text-center text-muted-foreground"}>
-            No posts found.
+            No posts found. Start following people to see their posts.
         </p>
     }
 
@@ -51,4 +50,4 @@ const Feed: React.FC = () => {
     );
 };
 
-export default Feed;
+export default FollowingFeed;

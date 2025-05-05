@@ -8,11 +8,15 @@ import apiClient from "@/lib/ky";
 import InfiniteScrollContainer from "@/components/infiniteScrollContainer";
 import PostsLoadingSkeleton from "@/components/postsLoadingSkeleton";
 
-const Feed: React.FC = () => {
+interface Props {
+    userId: string;
+}
+
+const UserPosts: React.FC<Props> = ({userId}) => {
     const {data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status,} = useInfiniteQuery({
-        queryKey: ["posts-feed", "home"],
-        queryFn: ({pageParam}) => apiClient.get("api/posts",
-        pageParam ? {searchParams: {cursor: pageParam}} : {}
+        queryKey: ["posts-feed", "user-posts"],
+        queryFn: ({pageParam}) => apiClient.get(`api/users/${userId}/posts`,
+            pageParam ? {searchParams: {cursor: pageParam}} : {}
         ).json<PostsPage>(),
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => lastPage.nextCursor
@@ -51,4 +55,4 @@ const Feed: React.FC = () => {
     );
 };
 
-export default Feed;
+export default UserPosts;

@@ -1,11 +1,18 @@
+import {NextRequest} from "next/server";
 import {validateRequest} from "@/auth";
 import prisma from "@/lib/prisma";
-import {getPostDataInclude, PostsPage} from "@/types";
-import {NextRequest} from "next/server";
+import { getPostDataInclude, PostsPage} from "@/types";
 
 
-export async function GET(req: NextRequest) {
+interface Options {
+    params: Promise<{
+        userId: string
+    }>
+}
+
+export async function GET(req: NextRequest, {params}: Options) {
     try {
+        const {userId} = await params
         const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
         const pageSize = 10
 
@@ -19,6 +26,7 @@ export async function GET(req: NextRequest) {
         }
 
         const posts = await prisma.post.findMany({
+            where: { userId },
             include: getPostDataInclude(user.id),
             orderBy: {
                 createdAt: "desc"

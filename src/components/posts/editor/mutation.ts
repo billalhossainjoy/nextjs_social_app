@@ -2,16 +2,28 @@ import {InfiniteData, QueryFilters, useMutation, useQueryClient} from "@tanstack
 import {submitPost} from "@/components/posts/editor/action";
 import {toast} from "sonner";
 import {PostsPage} from "@/types";
+import {useSession} from "@/context/sessionProvider";
 
 export function usePostMutation() {
     const queryClient = useQueryClient()
 
+    const {user} = useSession();
+
     return useMutation({
         mutationFn: submitPost,
         onSuccess: async (newPost) => {
-            const queryFilter: QueryFilters<InfiniteData<PostsPage, string | null>> = {
-                queryKey: ["posts-feed"]
-            }
+            const queryFilter = {
+                queryKey: ["posts-feed"] as readonly string[],
+                predicate(query: { queryKey: readonly unknown[] }){
+                    return ((query.queryKey.includes("home") || query.queryKey.includes("user-posts")) && query.queryKey.includes(user.id))
+                }
+            } satisfies QueryFilters<InfiniteData<PostsPage, string | null>,
+                Error,
+                InfiniteData<PostsPage, string | null>,
+                readonly string[]>
+
+
+
             await queryClient.cancelQueries(queryFilter)
 
             queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
@@ -36,8 +48,8 @@ export function usePostMutation() {
 
             queryClient.invalidateQueries({
                 queryKey: queryFilter.queryKey,
-                predicate(query) {
-                    return !query.state.data
+                predicate: (query) => {
+                    return queryFilter.predicate(query) && !query.state.data
                 }
             })
 

@@ -22,7 +22,7 @@ const Post: React.FC<Props> = ({post}) => {
                     <UserAvatar avatarUrl={post.user.avatarUrl}/>
                 </Link>
                 <div>
-                    <Link href={`/uses/${post.user.username}`} className={"block font-medium hover:underline "}>
+                    <Link href={`/users/${post.user.username}`} className={"block font-medium hover:underline "}>
                         {post.user.displayName}
                     </Link>
                     <Link href={`/posts/${post.id}`}
