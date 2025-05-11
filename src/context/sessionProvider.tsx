@@ -1,10 +1,11 @@
 "use client"
 
 import React, {createContext, PropsWithChildren, useContext} from 'react';
-import {User, Session} from "lucia";
+import {Session, User} from "lucia";
+import {UserData} from "@/types";
 
 interface SessionContext {
-    user: User;
+    user: User
     session: Session
 }
 

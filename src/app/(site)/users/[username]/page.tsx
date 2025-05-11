@@ -26,7 +26,6 @@ const getUser = cache(async (username: string, loggedInUserId: string) => {
         },
         select: getUserDataSelect(loggedInUserId)
     })
-    console.log(user)
     if(!user) notFound();
     return user
 })

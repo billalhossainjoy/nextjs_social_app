@@ -23,22 +23,22 @@ declare module "lucia" {
 }
 
 export const lucia = new Lucia(adapter, {
-        sessionCookie: {
-            expires: false,
-            attributes: {
-                secure: process.env.NODE_ENV === 'production',
-            }
-        },
-
-        getUserAttributes(data) {
-            return {
-                id: data.id,
-                username: data.username,
-                displayName: data.displayName,
-                avatarUrl: data.avatarUrl,
-                googleId: data.googleId
-            }
+    sessionCookie: {
+        expires: false,
+        attributes: {
+            secure: process.env.NODE_ENV === 'production',
         }
+    },
+
+    getUserAttributes(data) {
+        return {
+            id: data.id,
+            username: data.username,
+            displayName: data.displayName,
+            avatarUrl: data.avatarUrl,
+            googleId: data.googleId
+        }
+    }
 })
 
 export const validateRequest = cache(async (): Promise<AuthResult> => {
