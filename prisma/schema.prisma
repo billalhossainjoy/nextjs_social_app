@@ -16,14 +16,14 @@ model User {
   googleId     String?   @unique
   avatarUrl    String?
   bio          String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
   sessions     Session[]
 
   following Follow[] @relation("following")
   followers Follow[] @relation("followers")
 
   createat DateTime @default(now())
-  posts     Post[]
+  posts    Post[]
 
   @@map("users")
 }
@@ -57,4 +57,14 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@map("follows")
+}
+
+model test {
+  id   String @id @default()
+  name String
+  roll Model
+}
+
+enum Model {
+  Name
 }

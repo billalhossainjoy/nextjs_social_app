@@ -20,8 +20,6 @@ const UserTooltip: React.FC<Props> = ({children, user}) => {
         isFollowedByUser: !!user.followers.some(({followerId}) => followerId === loggedInUser.id)
     }
 
-    console.log('d', followerState)
-
     return (
         <TooltipProvider>
             <Tooltip>
