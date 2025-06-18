@@ -1,59 +1,67 @@
-"use client"
+"use client";
 
-import React from 'react';
-import {PostData} from "@/types";
+import React from "react";
+import { PostData } from "@/types";
 import Link from "next/link";
 import UserAvatar from "@/components/userAvatar";
-import {formatRelativeDate} from "@/lib/utils";
+import { formatRelativeDate } from "@/lib/utils";
 import PostMoreButton from "@/components/posts/postMoreButton";
 import Linkify from "@/components/linkify";
 import UserTooltip from "@/components/UserTooltip";
-import {useSession} from "@/context/sessionProvider";
+import { useSession } from "@/context/sessionProvider";
+import MediaPreviews from "@/components/posts/mediaPreviews";
 
 interface Props {
-    post: PostData
-};
+  post: PostData;
+}
 
-const Post: React.FC<Props> = ({post}) => {
-    const {user} = useSession()
-    return (
-        <article className={"group space-y-3 rounded-2xl bg-card p-5 shadow-sm"}>
-            <div className={"flex justify-between gap-3"}>
-            <div className={"flex flex-wrap gap-3"}>
-                <UserTooltip user={post.user}>
-                    <Link href={`/users/${post.user.username}`}>
-                        <UserAvatar avatarUrl={post.user.avatarUrl}/>
-                    </Link>
-                </UserTooltip>
-                <div>
-
-                    <UserTooltip user={post.user}>
-                        <Link href={`/users/${post.user.username}`} className={"block font-medium hover:underline "}>
-                            {post.user.displayName}
-                        </Link>
-                    </UserTooltip>
-                    <UserTooltip user={post.user}>
-                        <Link href={`/posts/${post.id}`}
-                        className={"text-sm block text-muted-foreground hover:underline"}
-                        >
-                            {
-                                formatRelativeDate(post.createdAt)
-                            }
-                        </Link>
-                    </UserTooltip>
-                </div>
-            </div>
-                {
-                    post.user.id === user.id && <PostMoreButton post={post} classname={"group-hover:opacity-100 opacity-0 transition-opacity"} />
+const Post: React.FC<Props> = ({ post }) => {
+  const { user } = useSession();
+  return (
+    <article className={"group space-y-3 rounded-2xl bg-card p-5 shadow-sm"}>
+      <div className={"flex justify-between gap-3"}>
+        <div className={"flex flex-wrap gap-3"}>
+          <UserTooltip user={post.user}>
+            <Link href={`/users/${post.user.username}`}>
+              <UserAvatar avatarUrl={post.user.avatarUrl} />
+            </Link>
+          </UserTooltip>
+          <div>
+            <UserTooltip user={post.user}>
+              <Link
+                href={`/users/${post.user.username}`}
+                className={"block font-medium hover:underline "}
+              >
+                {post.user.displayName}
+              </Link>
+            </UserTooltip>
+            <UserTooltip user={post.user}>
+              <Link
+                href={`/posts/${post.id}`}
+                className={
+                  "text-sm block text-muted-foreground hover:underline"
                 }
-            </div>
-            <Linkify>
-                <div className={"whitespace-pre-line break-words"}>
-                    {post.content}
-                </div>
-            </Linkify>
-        </article>
-    );
+              >
+                {formatRelativeDate(post.createdAt)}
+              </Link>
+            </UserTooltip>
+          </div>
+        </div>
+        {post.user.id === user.id && (
+          <PostMoreButton
+            post={post}
+            classname={"group-hover:opacity-100 opacity-0 transition-opacity"}
+          />
+        )}
+      </div>
+      <Linkify>
+        <div className={"whitespace-pre-line break-words"}>{post.content}</div>
+      </Linkify>
+      {!!post.attatchments.length && (
+        <MediaPreviews attachments={post.attatchments} />
+      )}
+    </article>
+  );
 };
 
 export default Post;

@@ -1,25 +1,33 @@
-"use server"
+"use server";
 
-import {validateRequest} from "@/auth";
-import {createPostSchema} from "@/validation/post.schema";
+import { validateRequest } from "@/auth";
+import { createPostSchema } from "@/validation/post.schema";
 import prisma from "@/lib/prisma";
-import {getPostDataInclude} from "@/types";
+import { getPostDataInclude } from "@/types";
 
-export async function submitPost(input : string) {
-    const {user} = await validateRequest()
+interface Input {
+  content: string;
+  mediaIds: string[];
+}
 
-    if(!user) {
-        throw new Error("User not authenticated");
-    }
+export async function submitPost(input: Input) {
+  const { user } = await validateRequest();
 
-    const {content} = createPostSchema.parse({content: input})
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
 
-    const post =  await prisma.post.create({
-        data: {
-            content,
-            userId: user.id
-        },
-        include: getPostDataInclude(user.id)
-    })
-    return post
+  const { content, mediaIds } = createPostSchema.parse(input);
+
+  const post = await prisma.post.create({
+    data: {
+      content,
+      userId: user.id,
+      attatchments: {
+        connect: mediaIds.map((id) => ({ id })),
+      },
+    },
+    include: getPostDataInclude(user.id),
+  });
+  return post;
 }
