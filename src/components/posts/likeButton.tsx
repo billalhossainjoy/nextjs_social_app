@@ -42,6 +42,7 @@ const LikeButton: React.FC<Props> = ({ postId, initialState }) => {
           (previousState?.likes || 0) + (previousState?.isLikedByUser ? -1 : 1),
         isLikedByUser: !previousState?.isLikedByUser,
       }));
+
       return { previousState };
     },
     onError(error, variables, context) {

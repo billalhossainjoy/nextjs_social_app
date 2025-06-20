@@ -11,6 +11,7 @@ import UserTooltip from "@/components/UserTooltip";
 import { useSession } from "@/context/sessionProvider";
 import MediaPreviews from "@/components/posts/mediaPreviews";
 import LikeButton from "@/components/posts/likeButton";
+import BookmarkButton from "@/components/posts/bookmarkButton";
 
 interface Props {
   post: PostData;
@@ -62,13 +63,23 @@ const Post: React.FC<Props> = ({ post }) => {
         <MediaPreviews attachments={post.attachments} />
       )}
       <hr />
-      <LikeButton
-        postId={post.id}
-        initialState={{
-          likes: post._count.likes,
-          isLikedByUser: post.likes.some(({ userId }) => userId === user.id),
-        }}
-      />
+      <div className={"flex justify-between gap-3"}>
+        <LikeButton
+          postId={post.id}
+          initialState={{
+            likes: post._count.likes,
+            isLikedByUser: post.likes.some(({ userId }) => userId === user.id),
+          }}
+        />
+        <BookmarkButton
+          postId={post.id}
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              ({ userId }) => userId === user.id,
+            ),
+          }}
+        />
+      </div>
     </article>
   );
 };

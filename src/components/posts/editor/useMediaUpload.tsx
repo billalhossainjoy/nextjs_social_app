@@ -64,7 +64,7 @@ export default function useMediaUpload() {
     startUpload(files);
   }
 
-  function removeAttatchment(fileName: string) {
+  function removeAttachment(fileName: string) {
     setAttachments((prev) => prev.filter((a) => a.file.name !== fileName));
   }
 
@@ -78,7 +78,7 @@ export default function useMediaUpload() {
     attachments,
     isUploading,
     uploadProcess,
-    removeAttatchment,
+    removeAttachment,
     reset,
   };
 }
