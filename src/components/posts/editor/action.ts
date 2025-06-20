@@ -23,7 +23,7 @@ export async function submitPost(input: Input) {
     data: {
       content,
       userId: user.id,
-      attatchments: {
+      attachments: {
         connect: mediaIds.map((id) => ({ id })),
       },
     },

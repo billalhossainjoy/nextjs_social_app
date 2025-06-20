@@ -19,8 +19,8 @@ import { cn } from "@/lib/utils";
 const PostEditor: React.FC = () => {
   const mutation = usePostMutation();
   const {
-    attatchments,
-    removeAttatchment,
+    attachments,
+    removeAttachment,
     uploadProcess,
     isUploading,
     startUpload,
@@ -58,9 +58,7 @@ const PostEditor: React.FC = () => {
     mutation.mutate(
       {
         content: input,
-        mediaIds: attatchments
-          .map((a) => a.mediaId)
-          .filter(Boolean) as string[],
+        mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
       },
       {
         onSuccess: () => {
@@ -94,10 +92,10 @@ const PostEditor: React.FC = () => {
           <input {...getInputProps()} />
         </div>
       </div>
-      {!!attatchments.length && (
+      {!!attachments.length && (
         <AttachmentPreviews
-          attachments={attatchments}
-          removeAttachment={removeAttatchment}
+          attachments={attachments}
+          removeAttachment={removeAttachment}
         />
       )}
       <div className={"flex justify-end items-center gap-3"}>
@@ -109,7 +107,7 @@ const PostEditor: React.FC = () => {
         )}
         <AttatchmentButtons
           onFilesSelected={startUpload}
-          disabled={isUploading || attatchments.length >= 5}
+          disabled={isUploading || attachments.length >= 5}
         />
         <LoadingButton
           loading={mutation.isPending}

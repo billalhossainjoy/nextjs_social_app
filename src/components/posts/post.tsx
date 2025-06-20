@@ -10,6 +10,7 @@ import Linkify from "@/components/linkify";
 import UserTooltip from "@/components/UserTooltip";
 import { useSession } from "@/context/sessionProvider";
 import MediaPreviews from "@/components/posts/mediaPreviews";
+import LikeButton from "@/components/posts/likeButton";
 
 interface Props {
   post: PostData;
@@ -57,9 +58,17 @@ const Post: React.FC<Props> = ({ post }) => {
       <Linkify>
         <div className={"whitespace-pre-line break-words"}>{post.content}</div>
       </Linkify>
-      {!!post.attatchments.length && (
-        <MediaPreviews attachments={post.attatchments} />
+      {!!post.attachments.length && (
+        <MediaPreviews attachments={post.attachments} />
       )}
+      <hr />
+      <LikeButton
+        postId={post.id}
+        initialState={{
+          likes: post._count.likes,
+          isLikedByUser: post.likes.some(({ userId }) => userId === user.id),
+        }}
+      />
     </article>
   );
 };

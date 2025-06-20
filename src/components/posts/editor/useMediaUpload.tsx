@@ -9,7 +9,7 @@ export interface Attachment {
 }
 
 export default function useMediaUpload() {
-  const [attatchments, setAttachments] = useState<Attachment[]>([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [uploadProcess, setUploadProcess] = useState<number>();
 
   const { isUploading, startUpload } = useUploadThing("attachment", {
@@ -56,7 +56,7 @@ export default function useMediaUpload() {
       toast.error("Please wait for the current upload finish.");
       return;
     }
-    if (attatchments.length + files.length > 5) {
+    if (attachments.length + files.length > 5) {
       toast.error("You can only upload up to 5 files at a time.");
       return;
     }
@@ -75,7 +75,7 @@ export default function useMediaUpload() {
 
   return {
     startUpload: handleStartUpload,
-    attatchments,
+    attachments,
     isUploading,
     uploadProcess,
     removeAttatchment,
