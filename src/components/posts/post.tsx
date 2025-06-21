@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PostData } from "@/types";
 import Link from "next/link";
 import UserAvatar from "@/components/userAvatar";
@@ -12,6 +12,8 @@ import { useSession } from "@/context/sessionProvider";
 import MediaPreviews from "@/components/posts/mediaPreviews";
 import LikeButton from "@/components/posts/likeButton";
 import BookmarkButton from "@/components/posts/bookmarkButton";
+import CommentsButton from "@/components/comments/commentsButton";
+import Comments from "@/components/comments/comments";
 
 interface Props {
   post: PostData;
@@ -19,6 +21,9 @@ interface Props {
 
 const Post: React.FC<Props> = ({ post }) => {
   const { user } = useSession();
+
+  const [showComments, setShowComments] = useState(false);
+
   return (
     <article className={"group space-y-3 rounded-2xl bg-card p-5 shadow-sm"}>
       <div className={"flex justify-between gap-3"}>
@@ -64,13 +69,21 @@ const Post: React.FC<Props> = ({ post }) => {
       )}
       <hr />
       <div className={"flex justify-between gap-3"}>
-        <LikeButton
-          postId={post.id}
-          initialState={{
-            likes: post._count.likes,
-            isLikedByUser: post.likes.some(({ userId }) => userId === user.id),
-          }}
-        />
+        <div className={"flex items-center gap-5"}>
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post._count.likes,
+              isLikedByUser: post.likes.some(
+                ({ userId }) => userId === user.id,
+              ),
+            }}
+          />
+          <CommentsButton
+            post={post}
+            onClick={() => setShowComments(!showComments)}
+          />
+        </div>
         <BookmarkButton
           postId={post.id}
           initialState={{
@@ -80,6 +93,7 @@ const Post: React.FC<Props> = ({ post }) => {
           }}
         />
       </div>
+      {showComments && <Comments post={post} />}
     </article>
   );
 };

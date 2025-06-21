@@ -6,6 +6,7 @@ import apiClient from "@/lib/ky";
 import { UserData } from "@/types";
 import Link from "next/link";
 import UserTooltip from "@/components/UserTooltip";
+import { HTTPError } from "ky";
 
 interface Props extends React.PropsWithChildren {
   username: string;
@@ -16,13 +17,13 @@ const UserLinkWithTooltip: React.FC<Props> = ({ username, children }) => {
     queryKey: ["user-data", username],
     queryFn: () =>
       apiClient.get(`api/users/username/${username}`).json<UserData>(),
-    // retry(failure, error) {
-    //     if (error instanceof HTTPError && error.response.status === 404) {
-    //         return false
-    //     }
-    //     return failure < 3
-    // },
-    // staleTime: Infinity
+    retry(failure, error) {
+      if (error instanceof HTTPError && error.response.status === 404) {
+        return false;
+      }
+      return failure < 3;
+    },
+    staleTime: Infinity,
   });
 
   if (!data) {

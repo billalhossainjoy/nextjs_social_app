@@ -6,6 +6,7 @@ import { getPostDataInclude, PostsPage } from "@/types";
 export async function GET(req: NextRequest) {
   try {
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
+
     const pageSize = 10;
     const { user } = await validateRequest();
     if (!user) {

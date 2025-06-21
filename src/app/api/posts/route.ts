@@ -37,7 +37,8 @@ export async function GET(req: NextRequest) {
     };
 
     return Response.json(data);
-  } catch {
+  } catch (err) {
+    console.log(err);
     return Response.json(
       {
         error: "Internal server error",
