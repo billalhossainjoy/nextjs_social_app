@@ -22,11 +22,14 @@ model User {
   following Follow[] @relation("following")
   followers Follow[] @relation("followers")
 
-  createat  DateTime   @default(now())
-  posts     Post[]
-  likes     like[]
-  bookmarks Bookmark[]
-  comments  Comment[]
+  createat             DateTime       @default(now())
+  posts                Post[]
+  likes                like[]
+  bookmarks            Bookmark[]
+  comments             Comment[]
+  recivedNotifications Notification[] @relation("recipient")
+  issuerNotification   Notification[] @relation("issuer")
+  Notification         Notification[]
 
   @@map("users")
 }
@@ -49,10 +52,11 @@ model Post {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  attachments Media[]
-  likes       like[]
-  bookmarks   Bookmark[]
-  comments    Comment[]
+  attachments         Media[]
+  likes               like[]
+  bookmarks           Bookmark[]
+  comments            Comment[]
+  linkedNotifications Notification[]
 
   @@map("posts")
 }
@@ -114,6 +118,30 @@ model Bookmark {
 
   @@unique([userId, postId])
   @@map("bookmarks")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  recipientId String
+  user        User             @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  issuerId    String
+  issuer      User             @relation("issuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  postId      String?
+  post        Post?            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  read        Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  FOLLOW
 }
 
 enum MediaType {

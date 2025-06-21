@@ -13,7 +13,6 @@ export async function GET(req: NextRequest, { params }: Options) {
   try {
     const { postId } = await params;
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
-    console.log(cursor);
     const pageSize = 5;
     const { user } = await validateRequest();
     if (!user) {
