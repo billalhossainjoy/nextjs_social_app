@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "db-generate": "dotenv -e .env -- prisma generate && dotenv -e .env -- prisma db push"
+    "db:development": "dotenv -e .env -- prisma generate && dotenv -e .env -- prisma db push",
+    "db:production": "dotenv -e .env.production -- prisma db push"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
