@@ -19,7 +19,7 @@ const Menubar: React.FC<Props> = async ({ className }) => {
     <div className={cn("", className)}>
       <Button
         variant="ghost"
-        className="flex items-center justify-start gap-3 w-full"
+        className="flex items-center justify-start gap-3"
         title="Home"
         asChild
       >

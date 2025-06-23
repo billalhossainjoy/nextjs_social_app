@@ -28,7 +28,7 @@ const NotificationsButton: React.FC<Props> = ({ initialState, className }) => {
   return (
     <Button
       variant={"ghost"}
-      className={cn("flex items-center justify-start gap-3 w-full", className)}
+      className={cn("flex items-center justify-start gap-3", className)}
       title={"Notifications"}
       asChild
     >
