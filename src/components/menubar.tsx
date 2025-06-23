@@ -1,17 +1,19 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { getNotificationsCount } from "@/app/(site)/notifications/actions";
+import { getNotificationsMessagesCount } from "@/app/(site)/notifications/actions";
 import { Button } from "@/components/ui/button";
 import NotificationsButton from "@/components/notificationsButton";
 import Link from "next/link";
 import { Bookmark, Home } from "lucide-react";
+import MessagesButton from "@/app/(site)/messages/messagesButton";
 
 type Props = {
   className: string;
 };
 
 const Menubar: React.FC<Props> = async ({ className }) => {
-  const { unReadCount } = await getNotificationsCount();
+  const { unreadNotificationCount, unreadMessagesCount } =
+    await getNotificationsMessagesCount();
 
   return (
     <div className={cn("", className)}>
@@ -26,7 +28,11 @@ const Menubar: React.FC<Props> = async ({ className }) => {
           <span className="hidden lg:inline">Home</span>
         </Link>
       </Button>
-      <NotificationsButton initialState={{ unReadCount: unReadCount }} />
+      <NotificationsButton
+        initialState={{ unReadCount: unreadNotificationCount }}
+      />
+      <MessagesButton initialState={{ unReadCount: unreadMessagesCount }} />
+
       <Button
         variant="ghost"
         className="flex items-center justify-start gap-3"

@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
         }
       >
         <Link href={"/"} className={"text-2xl font-bold text-primary"}>
-          warpBook
+          OpenParadox
         </Link>
         <SearchField />
         <UserButton className={"sm:ms-auto shadow-lg"} />

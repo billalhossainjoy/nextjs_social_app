@@ -1,26 +1,24 @@
 "use client";
 
 import React from "react";
-import { NotificationCountInfo } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
-import Link from "next/link";
+import { MessageCountInfo } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "@/lib/ky";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  initialState: NotificationCountInfo;
+  initialState: MessageCountInfo;
   className?: string;
 }
 
-const NotificationsButton: React.FC<Props> = ({ initialState, className }) => {
+const MessagesButton: React.FC<Props> = ({ initialState, className }) => {
   const { data } = useQuery({
-    queryKey: ["unread-notifications-count"],
+    queryKey: ["unread-messages-count"],
     queryFn: () =>
-      apiClient
-        .get(`api/notifications/unread-count`)
-        .json<NotificationCountInfo>(),
+      apiClient.get("/api/messages/unread-count").json<MessageCountInfo>(),
     initialData: initialState,
     refetchInterval: 60 * 1000,
   });
@@ -29,12 +27,12 @@ const NotificationsButton: React.FC<Props> = ({ initialState, className }) => {
     <Button
       variant={"ghost"}
       className={cn("flex items-center justify-start gap-3 w-full", className)}
-      title={"Notifications"}
+      title={"Messages"}
       asChild
     >
-      <Link href={`/notifications`}>
+      <Link href={"/messages"}>
         <div className={"relative"}>
-          <Bell />
+          <Mail />
           {!!data.unReadCount && (
             <span
               className={
@@ -45,10 +43,10 @@ const NotificationsButton: React.FC<Props> = ({ initialState, className }) => {
             </span>
           )}
         </div>
-        <span className={"hidden lg:inline"}>Notifications</span>
+        <span className={"hidden lg:inline"}>Messages</span>
       </Link>
     </Button>
   );
 };
 
-export default NotificationsButton;
+export default MessagesButton;

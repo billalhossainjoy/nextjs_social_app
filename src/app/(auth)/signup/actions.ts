@@ -7,6 +7,7 @@ import { lucia } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import streamClient from "@/lib/stream";
 
 export async function signUp(
   credentials: SignUpSchemaType,
@@ -21,7 +22,7 @@ export async function signUp(
       parallelism: 1,
     });
 
-    const exitstingUsername = await prisma.user.findFirst({
+    const existingUsername = await prisma.user.findFirst({
       where: {
         OR: [
           {
@@ -40,24 +41,34 @@ export async function signUp(
       },
     });
 
-    if (exitstingUsername && exitstingUsername.username === username) {
+    if (existingUsername && existingUsername.username === username) {
       return {
         error: "Username already exists.",
       };
     }
-    if (exitstingUsername && exitstingUsername.email === email) {
+    if (existingUsername && existingUsername.email === email) {
       return {
         error: "Email already exists.",
       };
     }
 
-    const newUser = await prisma.user.create({
-      data: {
+    const newUser = await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          username,
+          displayName: username,
+          email,
+          passwordHash,
+        },
+      });
+
+      await streamClient.upsertUser({
+        id: newUser.id,
         username,
-        displayName: username,
-        email,
-        passwordHash,
-      },
+        name: username,
+      });
+
+      return newUser;
     });
 
     const session = await lucia.createSession(newUser.id, {});

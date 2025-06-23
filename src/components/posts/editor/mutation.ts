@@ -18,7 +18,7 @@ export function usePostMutation() {
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
       const queryFilter = {
-        queryKey: ["posts-feed"] as readonly string[],
+        queryKey: ["posts-feed"],
         predicate(query: { queryKey: readonly unknown[] }) {
           return (
             query.queryKey.includes("home") ||
@@ -26,12 +26,7 @@ export function usePostMutation() {
               query.queryKey.includes(user.id))
           );
         },
-      } satisfies QueryFilters<
-        InfiniteData<PostsPage, string | null>,
-        Error,
-        InfiniteData<PostsPage, string | null>,
-        readonly string[]
-      >;
+      } satisfies QueryFilters;
 
       await queryClient.cancelQueries(queryFilter);
 
