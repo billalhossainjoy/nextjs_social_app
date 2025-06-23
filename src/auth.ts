@@ -4,6 +4,7 @@ import { Lucia, Session } from "lucia";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { UserData } from "@/types";
+import { Google } from "arctic";
 
 type AuthResult =
   | { user: UserData; session: Session }
@@ -36,6 +37,12 @@ export const lucia = new Lucia(adapter, {
     };
   },
 });
+
+export const google = new Google(
+  process.env.GOOGLE_CLIENT_ID!,
+  process.env.GOOGLE_CLIENT_SECRET!,
+  `${process.env.NEXT_PUBLIC_API_URL}/api/auth/callback/google`,
+);
 
 export const validateRequest = cache(async (): Promise<AuthResult> => {
   const cookieStore = await cookies();

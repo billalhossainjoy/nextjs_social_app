@@ -4,6 +4,7 @@ import Link from "next/link";
 import loginImage from "@/assets/loginImage.png";
 import Image from "next/image";
 import React from "react";
+import GoogleSignInButton from "@/app/(auth)/login/GoogleSignInButton";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -28,6 +29,12 @@ export default function Page() {
             </p>
           </div>
           <div className={"space-y-5"}>
+            <GoogleSignInButton />
+            <div className={"flex items-center gap-3"}>
+              <div className={"h-px flex-1 bg-muted"} />
+              <span>OR</span>
+              <div className={"h-px flex-1 bg-muted"} />
+            </div>
             <LoginForm />
             <Link
               href={"/signup"}

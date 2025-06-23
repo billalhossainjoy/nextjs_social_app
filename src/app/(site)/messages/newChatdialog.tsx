@@ -34,50 +34,23 @@ const NewChatDialog: React.FC<Props> = ({ onOpenChange, onChatCreated }) => {
 
   const [selectedUsers, setSelectedUsers] = useState<UserResponse[]>([]);
 
-  const { data, isFetching, isSuccess, isError } = useQuery({
+  const { data, isFetching, isError, isSuccess } = useQuery({
     queryKey: ["stream-users", searchInputDebounced],
     queryFn: async () =>
       client.queryUsers(
         {
-          name: { $ne: loggedInUser.id },
-          role: { $ne: "admin" },
+          // id: { $ne: loggedInUser.id },
+          // role: { $ne: "admin" },
           ...(searchInputDebounced
             ? {
                 $or: [
-                  {
-                    name: {
-                      $autocomplete: searchInputDebounced,
-                    },
-                  },
-                  {
-                    username: {
-                      $autocomplete: searchInputDebounced,
-                    },
-                  },
+                  { name: { $autocomplete: searchInputDebounced } },
+                  { username: { $autocomplete: searchInputDebounced } },
                 ],
               }
             : {}),
-          ...(searchInputDebounced
-            ? {
-                $or: [
-                  {
-                    name: {
-                      $autocomplete: searchInputDebounced,
-                    },
-                  },
-                  {
-                    username: {
-                      $autocomplete: searchInputDebounced,
-                    },
-                  },
-                ],
-              }
-            : {}),
-        } as any,
-        {
-          name: 1,
-          username: 1,
         },
+        { name: 1, username: 1 },
         { limit: 15 },
       ),
   });
