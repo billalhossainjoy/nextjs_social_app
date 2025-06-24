@@ -20,17 +20,17 @@ const Notification: React.FC<Props> = ({ notification }) => {
     }
   > = {
     FOLLOW: {
-      message: `${notification.issuer.displayName} followed you`,
+      message: `followed you`,
       icon: <User2 className={"size-7 text-primary"} />,
       href: `/users/${notification.issuer.username}`,
     },
     COMMENT: {
-      message: `${notification.issuer.displayName} comment on your post`,
+      message: `comment on your post`,
       icon: <MessageCircle className={"size-7 text-primary"} />,
       href: `/posts/${notification.postId}`,
     },
     LIKE: {
-      message: `${notification.issuer.displayName} liked your post`,
+      message: `liked your post`,
       icon: <Heart className={"size-7 text-destructive fill-destructive"} />,
       href: `/posts/${notification.postId}`,
     },
