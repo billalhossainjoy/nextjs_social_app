@@ -47,7 +47,7 @@ export default function Page() {
         <Image
           src={loginImage}
           alt={"login image"}
-          className={"w-1/2 hidden md:block"}
+          className={"w-1/2 hidden md:block px-6 py-20"}
         />
       </div>
     </main>

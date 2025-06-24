@@ -11,7 +11,8 @@ const GoogleSignInButton: React.FC = () => {
       asChild
     >
       <a href={"/login/google"}>
-        <GoogleIcon /> Sign in with Google
+        <GoogleIcon />{" "}
+        <span className={"dark:text-white"}>Sign in with Google</span>
       </a>
     </Button>
   );
