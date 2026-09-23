@@ -14,10 +14,6 @@ export async function GET(_req: NextRequest, { params }: Params) {
     const { userId } = await params;
     const { user: loggedInUser } = await validateRequest();
 
-    if (!loggedInUser) {
-      return Response.json({ error: "unauthorized" }, { status: 401 });
-    }
-
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -25,7 +21,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
       select: {
         followers: {
           where: {
-            followerId: loggedInUser.id,
+            followerId: loggedInUser?.id ?? "",
           },
           select: {
             followerId: true,
@@ -45,7 +41,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
     const data: FollowerInfo = {
       followers: user._count.followers,
-      isFollowedByUser: !!user.followers.length,
+      isFollowedByUser: !!loggedInUser && !!user.followers.length,
     };
 
     return Response.json(data);

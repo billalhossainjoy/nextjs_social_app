@@ -10,14 +10,17 @@ import apiClient from "@/lib/ky";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useLoginRedirect } from "@/hooks/useLoginRedirect";
 
 interface Props {
   postId: string;
   initialState: BookmarkInfo;
+  authenticated: boolean;
 }
 
 const BookmarkButton: React.FC<Props> = (props) => {
   const queryClient = useQueryClient();
+  const redirectToLogin = useLoginRedirect();
 
   const queryKey: QueryKey = ["bookmark-info", props.postId];
   const { data } = useQuery({
@@ -56,7 +59,14 @@ const BookmarkButton: React.FC<Props> = (props) => {
   });
 
   return (
-    <button onClick={() => mutate()}>
+    <button
+      onClick={() =>
+        props.authenticated ? mutate() : redirectToLogin()
+      }
+      aria-label={
+        props.authenticated ? "Bookmark post" : "Log in to bookmark this post"
+      }
+    >
       <Bookmark
         className={cn(
           "size-5",

@@ -9,6 +9,8 @@ const UsersWhoToFollow: React.FC =async () => {
 
     const usersToFollow =await WhoToFollow()
 
+    if (!usersToFollow.length) return null;
+
     return (
         <div className={"hidden md:block space-y-5 rounded-2xl bg-card shadow-sm p-5"}>
             <div className={"text-xl font-bold flex flex-col gap-2"}>

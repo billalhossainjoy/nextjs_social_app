@@ -4,15 +4,16 @@ import UserTooltip from "@/components/UserTooltip";
 import Link from "next/link";
 import UserAvatar from "@/components/userAvatar";
 import { formatRelativeDate } from "@/lib/utils";
-import { useSession } from "@/context/sessionProvider";
+import { useOptionalSession } from "@/context/sessionProvider";
 import CommentMoreButton from "@/components/comments/commentMoreButton";
 
 interface Props {
   comment: CommentData;
+  authenticated: boolean;
 }
 
-const Comment: React.FC<Props> = ({ comment }) => {
-  const { user } = useSession();
+const Comment: React.FC<Props> = ({ comment, authenticated }) => {
+  const { user } = useOptionalSession();
 
   return (
     <div className={"flex gap-3 py-3 items-center group/comment"}>
@@ -39,7 +40,7 @@ const Comment: React.FC<Props> = ({ comment }) => {
         </div>
         <div>{comment.content}</div>
       </div>
-      {comment.user.id === user.id && (
+      {authenticated && comment.user.id === user?.id && (
         <CommentMoreButton
           comment={comment}
           className={

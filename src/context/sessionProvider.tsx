@@ -5,11 +5,11 @@ import { Session } from "lucia";
 import { UserData } from "@/types";
 
 interface SessionContext {
-  user: UserData;
-  session: Session;
+  user: UserData | null;
+  session: Session | null;
 }
 
-const SessionContext = createContext<SessionContext | null>(null);
+const SessionContext = createContext<SessionContext | undefined>(undefined);
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -26,6 +26,16 @@ function SessionProvider({
 }
 
 export function useSession() {
+  const context = useContext(SessionContext);
+
+  if (!context?.user || !context.session) {
+    throw new Error("useSession requires an authenticated user");
+  }
+
+  return context as { user: UserData; session: Session };
+}
+
+export function useOptionalSession() {
   const context = useContext(SessionContext);
 
   if (!context) {

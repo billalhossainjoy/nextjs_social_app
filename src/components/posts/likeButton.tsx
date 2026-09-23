@@ -12,14 +12,17 @@ import apiClient from "@/lib/ky";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLoginRedirect } from "@/hooks/useLoginRedirect";
 
 interface Props {
   postId: string;
   initialState: LikeInfo;
+  authenticated: boolean;
 }
 
-const LikeButton: React.FC<Props> = ({ postId, initialState }) => {
+const LikeButton: React.FC<Props> = ({ postId, initialState, authenticated }) => {
   const queryClient = useQueryClient();
+  const redirectToLogin = useLoginRedirect();
   const queryKey: QueryKey = ["like-info", postId];
   const { data } = useQuery({
     queryKey,
@@ -52,7 +55,11 @@ const LikeButton: React.FC<Props> = ({ postId, initialState }) => {
     },
   });
   return (
-    <button onClick={() => mutate()} className={"flex items-center gap-2"}>
+    <button
+      onClick={() => (authenticated ? mutate() : redirectToLogin())}
+      className={"flex items-center gap-2"}
+      aria-label={authenticated ? "Like post" : "Log in to like this post"}
+    >
       <Heart
         className={cn(
           "size-5",

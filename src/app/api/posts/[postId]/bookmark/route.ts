@@ -13,7 +13,8 @@ export async function GET(req: Request, { params }: Options) {
     const { postId } = await params;
     const { user: loggedInUser } = await validateRequest();
     if (!loggedInUser) {
-      return Response.json({ error: "unauthorized" }, { status: 401 });
+      const data: BookmarkInfo = { isBookmarkedByUser: false };
+      return Response.json(data);
     }
 
     const bookmark = await prisma.bookmark.findUnique({

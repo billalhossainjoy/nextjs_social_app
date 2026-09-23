@@ -4,14 +4,25 @@ import { useSubmitCommentMutation } from "@/components/comments/mutations";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, SendHorizonal } from "lucide-react";
+import { useLoginRedirect } from "@/hooks/useLoginRedirect";
 
 interface Props {
   post: PostData;
+  authenticated: boolean;
 }
 
-const CommentsInput: React.FC<Props> = ({ post }) => {
+const CommentsInput: React.FC<Props> = ({ post, authenticated }) => {
   const [input, setInput] = useState("");
   const mutation = useSubmitCommentMutation(post.id);
+  const redirectToLogin = useLoginRedirect();
+
+  if (!authenticated) {
+    return (
+      <Button className="w-full" variant="outline" onClick={redirectToLogin}>
+        Log in to join the conversation
+      </Button>
+    );
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

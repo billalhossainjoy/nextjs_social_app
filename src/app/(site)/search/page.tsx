@@ -11,6 +11,10 @@ export async function generateMetadata({ searchParams }: Props) {
   const { q } = await searchParams;
   return {
     title: `Search result for "${q}"`,
+    robots: {
+      index: false,
+      follow: true,
+    },
   };
 }
 

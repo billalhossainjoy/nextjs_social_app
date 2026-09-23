@@ -10,10 +10,6 @@ export async function GET(req: NextRequest) {
     const searchQuery = q?.split(" ").join(" & ");
     const pageSize = 10;
     const { user } = await validateRequest();
-
-    if (!user) {
-      return Response.json({ error: "unauthorized" }, { status: 401 });
-    }
     const posts = await prisma.post.findMany({
       where: {
         OR: [
@@ -41,7 +37,7 @@ export async function GET(req: NextRequest) {
           },
         ],
       },
-      include: getPostDataInclude(user.id),
+      include: getPostDataInclude(user?.id),
       orderBy: { createdAt: "desc" },
       take: pageSize + 1,
       cursor: cursor ? { id: cursor } : undefined,

@@ -8,9 +8,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import streamClient from "@/lib/stream";
+import { sanitizeReturnTo } from "@/lib/returnTo";
 
 export async function signUp(
   credentials: SignUpSchemaType,
+  returnTo?: string,
 ): Promise<{ error: string }> {
   try {
     const { username, email, password } = signUpSchema.parse(credentials);
@@ -81,7 +83,7 @@ export async function signUp(
       sessionCookie.attributes,
     );
 
-    return redirect("/");
+    return redirect(sanitizeReturnTo(returnTo));
   } catch (error) {
     console.log(error);
     if (isRedirectError(error)) throw error;

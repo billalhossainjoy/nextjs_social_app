@@ -15,13 +15,10 @@ export async function GET(req: NextRequest, { params }: Options) {
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
     const pageSize = 5;
     const { user } = await validateRequest();
-    if (!user) {
-      return Response.json({ error: "unauthorized" }, { status: 401 });
-    }
 
     const comments = await prisma.comment.findMany({
       where: { postId },
-      include: getCommentDataInclude(user.id),
+      include: getCommentDataInclude(user?.id),
       orderBy: {
         createdAt: "asc",
       },

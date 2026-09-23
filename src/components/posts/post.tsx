@@ -8,7 +8,7 @@ import { formatRelativeDate } from "@/lib/utils";
 import PostMoreButton from "@/components/posts/postMoreButton";
 import Linkify from "@/components/linkify";
 import UserTooltip from "@/components/UserTooltip";
-import { useSession } from "@/context/sessionProvider";
+import { useOptionalSession } from "@/context/sessionProvider";
 import MediaPreviews from "@/components/posts/mediaPreviews";
 import LikeButton from "@/components/posts/likeButton";
 import BookmarkButton from "@/components/posts/bookmarkButton";
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({ post }) => {
-  const { user } = useSession();
+  const { user } = useOptionalSession();
 
   const [showComments, setShowComments] = useState(false);
 
@@ -54,7 +54,7 @@ const Post: React.FC<Props> = ({ post }) => {
             </UserTooltip>
           </div>
         </div>
-        {post.user.id === user.id && (
+        {post.user.id === user?.id && (
           <PostMoreButton
             post={post}
             classname={"group-hover:opacity-100 opacity-0 transition-opacity"}
@@ -72,10 +72,11 @@ const Post: React.FC<Props> = ({ post }) => {
         <div className={"flex items-center gap-5"}>
           <LikeButton
             postId={post.id}
+            authenticated={!!user}
             initialState={{
               likes: post._count.likes,
               isLikedByUser: post.likes.some(
-                ({ userId }) => userId === user.id,
+                ({ userId }) => userId === user?.id,
               ),
             }}
           />
@@ -86,14 +87,15 @@ const Post: React.FC<Props> = ({ post }) => {
         </div>
         <BookmarkButton
           postId={post.id}
+          authenticated={!!user}
           initialState={{
             isBookmarkedByUser: post.bookmarks.some(
-              ({ userId }) => userId === user.id,
+              ({ userId }) => userId === user?.id,
             ),
           }}
         />
       </div>
-      {showComments && <Comments post={post} />}
+      {showComments && <Comments post={post} authenticated={!!user} />}
     </article>
   );
 };

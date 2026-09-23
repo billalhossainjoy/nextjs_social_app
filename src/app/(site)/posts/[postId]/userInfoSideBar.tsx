@@ -11,7 +11,6 @@ interface Props {
 
 export async function UserInfoSideBar({ user }: Props) {
   const { user: loggedInUser } = await validateRequest();
-  if (!loggedInUser) return null;
 
   return (
     <div className={"space-y-5 rounded-2xl bg-card p-5 shadow-sm"}>
@@ -26,13 +25,13 @@ export async function UserInfoSideBar({ user }: Props) {
           {user.bio}
         </div>
       </Linkify>
-      {user.id !== loggedInUser.id && (
+      {user.id !== loggedInUser?.id && (
         <FollowButton
           userId={user.id}
           initialState={{
             followers: user._count.followers,
             isFollowedByUser: user.followers.some(
-              ({ followerId }) => followerId === loggedInUser.id,
+              ({ followerId }) => followerId === loggedInUser?.id,
             ),
           }}
         />

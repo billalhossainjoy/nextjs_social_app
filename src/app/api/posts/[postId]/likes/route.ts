@@ -12,16 +12,13 @@ export async function GET(req: Request, { params }: Options) {
   try {
     const { postId } = await params;
     const { user: loggedInUser } = await validateRequest();
-    if (!loggedInUser) {
-      return Response.json({ error: "unauthorized" }, { status: 401 });
-    }
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
       select: {
         likes: {
           where: {
-            userId: loggedInUser.id,
+            userId: loggedInUser?.id ?? "",
           },
           select: {
             userId: true,
@@ -40,7 +37,7 @@ export async function GET(req: Request, { params }: Options) {
 
     const data: LikeInfo = {
       likes: post._count.likes,
-      isLikedByUser: !!post.likes.length,
+      isLikedByUser: !!loggedInUser && !!post.likes.length,
     };
 
     return Response.json(data);

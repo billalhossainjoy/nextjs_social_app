@@ -2,8 +2,14 @@ import React from "react";
 import Link from "next/link";
 import UserButton from "@/components/userButton";
 import SearchField from "@/components/searchField";
+import { UserData } from "@/types";
+import GuestAuthButtons from "@/components/guestAuthButtons";
 
-const Navbar: React.FC = () => {
+interface Props {
+  user: UserData | null;
+}
+
+const Navbar: React.FC<Props> = ({ user }) => {
   return (
     <header className={"sticky top-0 z-10 bg-card shadow-sm"}>
       <div
@@ -15,7 +21,11 @@ const Navbar: React.FC = () => {
           OpenParadox
         </Link>
         <SearchField />
-        <UserButton className={"sm:ms-auto shadow-lg"} />
+        {user ? (
+          <UserButton className={"sm:ms-auto shadow-lg"} />
+        ) : (
+          <GuestAuthButtons />
+        )}
       </div>
     </header>
   );

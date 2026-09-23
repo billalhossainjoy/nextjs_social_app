@@ -6,6 +6,7 @@ import { slugify } from "@/lib/utils";
 import streamClient from "@/lib/stream";
 import { OAuth2RequestError } from "arctic";
 import ky from "ky";
+import { sanitizeReturnTo } from "@/lib/returnTo";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
@@ -14,10 +15,15 @@ export async function GET(req: NextRequest) {
 
   const storedState = cookie.get("state")?.value;
   const storedCodeVerifier = cookie.get("code_verifier")?.value;
+  const returnTo = sanitizeReturnTo(cookie.get("oauth_return_to")?.value);
 
   if (!code || !state || storedState !== state || !storedCodeVerifier) {
     return new Response("Unauthorized", { status: 401 });
   }
+
+  cookie.delete("state");
+  cookie.delete("code_verifier");
+  cookie.delete("oauth_return_to");
 
   try {
     const tokens = await google.validateAuthorizationCode(
@@ -52,7 +58,7 @@ export async function GET(req: NextRequest) {
       return new Response(null, {
         status: 302,
         headers: {
-          Location: "/",
+          Location: returnTo,
         },
       });
     }
@@ -91,7 +97,7 @@ export async function GET(req: NextRequest) {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/",
+        Location: returnTo,
       },
     });
   } catch (err) {

@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export function getUserDataSelect(loggedInUserId: string) {
+export function getUserDataSelect(loggedInUserId?: string | null) {
   return {
     id: true,
     username: true,
@@ -10,7 +10,7 @@ export function getUserDataSelect(loggedInUserId: string) {
     createdAt: true,
     followers: {
       where: {
-        followerId: loggedInUserId,
+        followerId: loggedInUserId ?? "",
       },
       select: {
         followerId: true,
@@ -29,7 +29,7 @@ export type UserData = Prisma.UserGetPayload<{
   select: ReturnType<typeof getUserDataSelect>;
 }>;
 
-export function getPostDataInclude(loggedInUserId: string) {
+export function getPostDataInclude(loggedInUserId?: string | null) {
   return {
     user: {
       select: getUserDataSelect(loggedInUserId),
@@ -37,7 +37,7 @@ export function getPostDataInclude(loggedInUserId: string) {
     attachments: true,
     likes: {
       where: {
-        userId: loggedInUserId,
+        userId: loggedInUserId ?? "",
       },
       select: {
         userId: true,
@@ -45,7 +45,7 @@ export function getPostDataInclude(loggedInUserId: string) {
     },
     bookmarks: {
       where: {
-        userId: loggedInUserId,
+        userId: loggedInUserId ?? "",
       },
       select: {
         userId: true,
@@ -60,7 +60,7 @@ export function getPostDataInclude(loggedInUserId: string) {
   } satisfies Prisma.PostInclude;
 }
 
-export function getCommentDataInclude(loggedInUserId: string) {
+export function getCommentDataInclude(loggedInUserId?: string | null) {
   return {
     user: {
       select: getUserDataSelect(loggedInUserId),

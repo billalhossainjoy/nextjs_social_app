@@ -9,9 +9,10 @@ import { Loader2 } from "lucide-react";
 
 interface Props {
   post: PostData;
+  authenticated: boolean;
 }
 
-const Comments: React.FC<Props> = ({ post }) => {
+const Comments: React.FC<Props> = ({ post, authenticated }) => {
   const { data, hasNextPage, isFetching, fetchNextPage, status } =
     useInfiniteQuery({
       queryKey: ["comments", post.id],
@@ -43,7 +44,7 @@ const Comments: React.FC<Props> = ({ post }) => {
 
   return (
     <div>
-      <CommentsInput post={post} />
+      <CommentsInput post={post} authenticated={authenticated} />
       {hasNextPage && (
         <Button
           className={"mx-auto block py-3"}
@@ -65,7 +66,11 @@ const Comments: React.FC<Props> = ({ post }) => {
       )}
       <div>
         {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} />
+          <Comment
+            key={comment.id}
+            comment={comment}
+            authenticated={authenticated}
+          />
         ))}
       </div>
     </div>

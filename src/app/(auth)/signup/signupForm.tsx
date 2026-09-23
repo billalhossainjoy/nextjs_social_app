@@ -16,7 +16,11 @@ import { signUp } from "@/app/(auth)/signup/actions";
 import PasswordInput from "@/components/passwordInput";
 import LoadingButton from "@/components/loadingButton";
 
-const SignupForm: React.FC = () => {
+interface Props {
+  returnTo?: string;
+}
+
+const SignupForm: React.FC<Props> = ({ returnTo }) => {
   const [error, setError] = useState<string>();
   const [isPending, startTransaction] = useTransition();
 
@@ -32,7 +36,7 @@ const SignupForm: React.FC = () => {
   const onSubmit: SubmitHandler<SignUpSchemaType> = async (data) => {
     setError(undefined);
     startTransaction(async () => {
-      const { error } = await signUp(data);
+      const { error } = await signUp(data, returnTo);
       if (error) {
         setError(error);
       }

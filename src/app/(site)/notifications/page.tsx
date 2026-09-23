@@ -2,12 +2,18 @@ import React from "react";
 import { Metadata } from "next";
 import TrendsSidebar from "@/components/trendsSidebar";
 import Notifications from "@/app/(site)/notifications/notifications";
+import { validateRequest } from "@/auth";
+import { redirect } from "next/navigation";
+import { getLoginPath } from "@/lib/returnTo";
 
 export const metadata: Metadata = {
   title: "Notifications",
 };
 
-const Page: React.FC = () => {
+const Page: React.FC = async () => {
+  const { user } = await validateRequest();
+  if (!user) redirect(getLoginPath("/notifications"));
+
   return (
     <main className={"flex w-full main-w-0 gap-5"}>
       <div className={"w-full min-w-0 space-y-5"}>

@@ -9,11 +9,13 @@ import MessagesButton from "@/app/(site)/messages/messagesButton";
 
 type Props = {
   className: string;
+  authenticated: boolean;
 };
 
-const Menubar: React.FC<Props> = async ({ className }) => {
-  const { unreadNotificationCount, unreadMessagesCount } =
-    await getNotificationsMessagesCount();
+const Menubar: React.FC<Props> = async ({ className, authenticated }) => {
+  const counts = authenticated
+    ? await getNotificationsMessagesCount()
+    : null;
 
   return (
     <div className={cn("", className)}>
@@ -28,22 +30,27 @@ const Menubar: React.FC<Props> = async ({ className }) => {
           <span className="hidden lg:inline">Home</span>
         </Link>
       </Button>
-      <NotificationsButton
-        initialState={{ unReadCount: unreadNotificationCount }}
-      />
-      <MessagesButton initialState={{ unReadCount: unreadMessagesCount }} />
-
-      <Button
-        variant="ghost"
-        className="flex items-center justify-start gap-3"
-        title="Bookmarks"
-        asChild
-      >
-        <Link href="/bookmarks">
-          <Bookmark />
-          <span className="hidden lg:inline">Bookmarks</span>
-        </Link>
-      </Button>
+      {counts && (
+        <>
+          <NotificationsButton
+            initialState={{ unReadCount: counts.unreadNotificationCount }}
+          />
+          <MessagesButton
+            initialState={{ unReadCount: counts.unreadMessagesCount }}
+          />
+          <Button
+            variant="ghost"
+            className="flex items-center justify-start gap-3"
+            title="Bookmarks"
+            asChild
+          >
+            <Link href="/bookmarks">
+              <Bookmark />
+              <span className="hidden lg:inline">Bookmarks</span>
+            </Link>
+          </Button>
+        </>
+      )}
     </div>
   );
 };

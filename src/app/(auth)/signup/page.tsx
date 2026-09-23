@@ -4,12 +4,21 @@ import Image from "next/image";
 import signupImage from "@/assets/signupImage.png";
 import Link from "next/link";
 import SignupForm from "@/app/(auth)/signup/signupForm";
+import { sanitizeReturnTo } from "@/lib/returnTo";
 
 export const metadata: Metadata = {
   title: "Sign Up",
 };
 
-const Page: React.FC = () => {
+interface Props {
+  searchParams: Promise<{ returnTo?: string }>;
+}
+
+const Page: React.FC<Props> = async ({ searchParams }) => {
+  const params = await searchParams;
+  const returnTo = sanitizeReturnTo(params.returnTo);
+  const loginHref = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+
   return (
     <main className={"flex h-screen items-center justify-center p-5"}>
       <div
@@ -27,9 +36,9 @@ const Page: React.FC = () => {
             </p>
           </div>
           <div className={"space-y-5"}>
-            <SignupForm />
+            <SignupForm returnTo={returnTo} />
             <Link
-              href={"/login"}
+              href={loginHref}
               className={" block text-center hover:underline"}
             >
               Already have an account? Log in here

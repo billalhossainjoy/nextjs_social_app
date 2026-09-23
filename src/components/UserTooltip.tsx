@@ -1,6 +1,6 @@
 import React, {PropsWithChildren} from 'react';
 import {UserData} from "@/types";
-import {useSession} from "@/context/sessionProvider";
+import {useOptionalSession} from "@/context/sessionProvider";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import Link from "next/link";
 import UserAvatar from "@/components/userAvatar";
@@ -13,11 +13,11 @@ interface Props extends PropsWithChildren {
 }
 
 const UserTooltip: React.FC<Props> = ({children, user}) => {
-    const {user: loggedInUser} = useSession()
+    const {user: loggedInUser} = useOptionalSession()
 
     const followerState = {
         followers: user._count.followers,
-        isFollowedByUser: !!user.followers.some(({followerId}) => followerId === loggedInUser.id)
+        isFollowedByUser: !!user.followers.some(({followerId}) => followerId === loggedInUser?.id)
     }
 
     return (
@@ -33,8 +33,8 @@ const UserTooltip: React.FC<Props> = ({children, user}) => {
                                 <UserAvatar size={70} avatarUrl={user.avatarUrl} />
                             </Link>
                             {
-                                loggedInUser.id !== user.id && (
-                                    <FollowButton userId={user.id} initialState={{followers: 1, isFollowedByUser: false}} />
+                                loggedInUser?.id !== user.id && (
+                                    <FollowButton userId={user.id} initialState={followerState} />
                                 )
                             }
                         </div>

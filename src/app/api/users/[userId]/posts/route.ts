@@ -16,20 +16,10 @@ export async function GET(req: NextRequest, { params }: Options) {
     const pageSize = 10;
 
     const { user } = await validateRequest();
-    if (!user) {
-      return Response.json(
-        {
-          error: "Unauthorized",
-        },
-        {
-          status: 401,
-        },
-      );
-    }
 
     const posts = await prisma.post.findMany({
       where: { userId },
-      include: getPostDataInclude(user.id),
+      include: getPostDataInclude(user?.id),
       orderBy: {
         createdAt: "desc",
       },

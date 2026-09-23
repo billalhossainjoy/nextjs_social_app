@@ -9,7 +9,7 @@ import EditProfileButton from "@/app/(site)/users/[username]/editProfileButton";
 
 type Props = {
   user: UserData;
-  loggedInUserId: string;
+  loggedInUserId?: string;
 };
 
 const UserProfile: React.FC<Props> = ({ user, loggedInUserId }) => {

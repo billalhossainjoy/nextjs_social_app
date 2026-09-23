@@ -1,7 +1,15 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-const GoogleSignInButton: React.FC = () => {
+interface Props {
+  returnTo?: string;
+}
+
+const GoogleSignInButton: React.FC<Props> = ({ returnTo }) => {
+  const href = returnTo
+    ? `/login/google?returnTo=${encodeURIComponent(returnTo)}`
+    : "/login/google";
+
   return (
     <Button
       variant={"outline"}
@@ -10,7 +18,7 @@ const GoogleSignInButton: React.FC = () => {
       }
       asChild
     >
-      <a href={"/login/google"}>
+      <a href={href}>
         <GoogleIcon />{" "}
         <span className={"dark:text-white"}>Sign in with Google</span>
       </a>

@@ -16,7 +16,7 @@ interface Props {
     params: Promise<Params>
 }
 
-const getUser = cache(async (username: string, loggedInUserId: string) => {
+const getUser = cache(async (username: string, loggedInUserId?: string) => {
     const user = await prisma.user.findFirst({
         where: {
             username: {
@@ -35,12 +35,11 @@ export async function generateMetadata ({params}: Props): Promise<Metadata> {
     const { username } = await params
     const {user: loggedInUser} = await validateRequest()
 
-    if(!loggedInUser) return {}
-
-    const user = await  getUser(username, loggedInUser.id)
+    const user = await getUser(username, loggedInUser?.id)
 
     return {
-        title: `${user.displayName} (@${user.username})`
+        title: `${user.displayName} (@${user.username})`,
+        description: user.bio || `View posts from ${user.displayName} on OpenParadox.`
     }
 }
 
@@ -48,17 +47,11 @@ export default async function Page ({params}: Props) {
     const {username} = await params
     const {user: loggedInUser} = await validateRequest()
 
-    if(!loggedInUser) {
-        return <p className={"text-destructive"}>
-            Your&apos;re not authorized to view this page
-        </p>
-    }
-
-    const user =await getUser(username, loggedInUser.id);
+    const user = await getUser(username, loggedInUser?.id);
 
     return <main className={"flex w-full min-w-0 gap-5"} >
         <div className={"w-full min-w-0 space-y-5"}>
-            <UserProfile user={user} loggedInUserId={loggedInUser.id} />
+            <UserProfile user={user} loggedInUserId={loggedInUser?.id} />
             <div className={"rounded-2xl bg-card p-5 shadow-sm text-center"}>
                 <h1 className={"text-2xl font-bold"}>
                     {user.displayName}&apos;s posts

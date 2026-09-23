@@ -5,12 +5,21 @@ import loginImage from "@/assets/loginImage.png";
 import Image from "next/image";
 import React from "react";
 import GoogleSignInButton from "@/app/(auth)/login/GoogleSignInButton";
+import { sanitizeReturnTo } from "@/lib/returnTo";
 
 export const metadata: Metadata = {
   title: "Login",
 };
 
-export default function Page() {
+interface Props {
+  searchParams: Promise<{ returnTo?: string }>;
+}
+
+export default async function Page({ searchParams }: Props) {
+  const params = await searchParams;
+  const returnTo = sanitizeReturnTo(params.returnTo);
+  const signupHref = `/signup?returnTo=${encodeURIComponent(returnTo)}`;
+
   return (
     <main className={"flex h-screen items-center justify-center p-5"}>
       <div
@@ -29,15 +38,15 @@ export default function Page() {
             </p>
           </div>
           <div className={"space-y-5"}>
-            <GoogleSignInButton />
+            <GoogleSignInButton returnTo={returnTo} />
             <div className={"flex items-center gap-3"}>
               <div className={"h-px flex-1 bg-muted"} />
               <span>OR</span>
               <div className={"h-px flex-1 bg-muted"} />
             </div>
-            <LoginForm />
+            <LoginForm returnTo={returnTo} />
             <Link
-              href={"/signup"}
+              href={signupHref}
               className={"block text-center hover:underline"}
             >
               Don&apos;t have an account? sign up

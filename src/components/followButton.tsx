@@ -6,6 +6,8 @@ import {Button} from "@/components/ui/button";
 import {QueryKey, useMutation, useQueryClient} from "@tanstack/react-query";
 import apiClient from "@/lib/ky";
 import {toast} from "sonner";
+import {useOptionalSession} from "@/context/sessionProvider";
+import {useLoginRedirect} from "@/hooks/useLoginRedirect";
 
 type Props = {
     userId: string;
@@ -13,6 +15,8 @@ type Props = {
 };
 
 const FollowButton: React.FC<Props> = ({userId, initialState}) => {
+    const {user} = useOptionalSession()
+    const redirectToLogin = useLoginRedirect()
     const {data} = useFollowerInfo(userId, initialState)
 
     const queryClient = useQueryClient()
@@ -42,9 +46,13 @@ const FollowButton: React.FC<Props> = ({userId, initialState}) => {
 
     return (
         <Button variant={data.isFollowedByUser ? "secondary" : "default"} onClick={() => {
-            mutate()
+            if (user) {
+                mutate()
+            } else {
+                redirectToLogin()
+            }
         }} className={"cursor-pointer"}>
-            {data.isFollowedByUser ? "Unfollow" : "Follow"}
+            {user ? (data.isFollowedByUser ? "Unfollow" : "Follow") : "Log in to follow"}
         </Button>
     );
 };

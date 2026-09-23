@@ -6,8 +6,9 @@ import prisma from "@/lib/prisma";
 import {verify} from "@node-rs/argon2"
 import {lucia} from "@/auth";
 import {cookies} from "next/headers";
+import {sanitizeReturnTo} from "@/lib/returnTo";
 
-export async function login(credentials: LoginSchemaType): Promise<{error: string}> {
+export async function login(credentials: LoginSchemaType, returnTo?: string): Promise<{error: string}> {
     try {
         const {identifier, password} = loginSchema.parse(credentials)
 
@@ -55,7 +56,7 @@ export async function login(credentials: LoginSchemaType): Promise<{error: strin
         cookieStore.set(sessionCookie.name, sessionCookie.value,sessionCookie.attributes)
 
 
-        return redirect("/")
+        return redirect(sanitizeReturnTo(returnTo))
     }catch (error) {
         if(isRedirectError(error)) throw error;
         return {

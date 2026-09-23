@@ -9,7 +9,11 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {Input} from "@/components/ui/input";
 import LoadingButton from "@/components/loadingButton";
 
-const LoginForm: React.FC = () => {
+interface Props {
+    returnTo?: string;
+}
+
+const LoginForm: React.FC<Props> = ({returnTo}) => {
     const [error, setError] = useState<string>()
 
     const [isPending, startTransition] = useTransition()
@@ -25,7 +29,7 @@ const LoginForm: React.FC = () => {
     const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
         setError(undefined)
         startTransition(async () => {
-            const {error} = await login(data)
+            const {error} = await login(data, returnTo)
             if(error) {
                 setError(error)
             }
